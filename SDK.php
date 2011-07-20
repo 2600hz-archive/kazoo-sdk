@@ -13,7 +13,6 @@
  */
 
 require_once 'Pest.php';
-require_once 'config.php';
 
 class SDK {
 
