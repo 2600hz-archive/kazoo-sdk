@@ -13,16 +13,20 @@
  */
 
 require_once 'Pest.php';
+require_once 'config.php';
 
 class SDK {
 
 	/**
 	 * Server url to join the API
 	 * Don't forget to put the account_id at the end and a "/"
+     * 
+     * Put the url to your server here with the account id
+     * EX : http://blabla.2600hz.com/accounts/43563787366353663563/
 	 * 
 	 * @var string $URL
 	 */
-	protected $URL = 'http://apps002-dev-ord.2600hz.com:8000/v1/accounts/04152ed2b428922e99ac66f3a71b0215/';
+	protected $URL = '';
 	
 	/**
 	 * First definition of the URI
