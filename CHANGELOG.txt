@@ -1,0 +1,13 @@
+July 22, 2011 - 1.1 : 
+
+    - Adding Auth-token management.
+    - Adding a test folder (thx Philippe Sultan)
+        -> It is now possible to test some aspects of the SDK.
+    - Changing the way that the SDK is invoke.
+    - Changing the name of the main SDK file (thx Philippe Sultan).
+    - Fixing some aspects of the exception.
+    - The $id argument for the CrossbarSession::get() function is now optional.
+
+July 14, 2011 - 1.0 :
+    
+    - Initial release

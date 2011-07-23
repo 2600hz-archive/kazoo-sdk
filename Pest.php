@@ -8,28 +8,34 @@
  * This code is licensed for use, modification, and distribution
  * under the terms of the MIT License (see http://en.wikipedia.org/wiki/MIT_License)
  */
+
 class Pest {
 
     public $curl_opts = array(
-        CURLOPT_RETURNTRANSFER => true, // return result instead of echoing
-        CURLOPT_SSL_VERIFYPEER => false, // stop cURL from verifying the peer's certificate
-        CURLOPT_FOLLOWLOCATION => true, // follow redirects, Location: headers
+        CURLOPT_RETURNTRANSFER => TRUE, // return result instead of echoing
+        CURLOPT_SSL_VERIFYPEER => FALSE, // stop cURL from verifying the peer's certificate
+        CURLOPT_FOLLOWLOCATION => TRUE, // follow redirects, Location: headers
         CURLOPT_MAXREDIRS => 10     // but dont redirect more than 10 times
     );
     public $base_url;
+    public $auth_token;
     public $last_response;
     public $last_request;
 
-    public function __construct($base_url) {
+    public function __construct($base_url, $auth_token) {
         if(!function_exists('curl_init')) {
             throw new Exception('CURL module not available! Pest requires CURL. See http://php.net/manual/en/book.curl.php');
         }
 
         $this->base_url = $base_url;
+        $this->auth_token = $auth_token;
     }
 
     public function get($url) {
-        $curl = $this->prepRequest($this->curl_opts, $this->base_url.$url);
+        $curl_opts = $this->curl_opts;
+        $curl_opts[CURLOPT_HTTPHEADER] = array('X-Auth-Token: '.$this->auth_token, 'Accept: application/json');
+
+        $curl = $this->prepRequest($curl_opts, $this->base_url.$url);
         $body = $this->doRequest($curl);
 
         $body = $this->processBody($body);
@@ -42,7 +48,7 @@ class Pest {
 
         $curl_opts = $this->curl_opts;
         $curl_opts[CURLOPT_CUSTOMREQUEST] = 'POST';
-        $curl_opts[CURLOPT_HTTPHEADER] = array('Content-Length: '.strlen($data), 'Content-type:application/json');
+        $curl_opts[CURLOPT_HTTPHEADER] = array('X-Auth-Token: '.$this->auth_token, 'Content-Length: '.strlen($data), 'Content-type:application/json');
         $curl_opts[CURLOPT_POSTFIELDS] = $data;
 
         $curl = $this->prepRequest($curl_opts, $this->base_url.$url);
@@ -58,7 +64,7 @@ class Pest {
 
         $curl_opts = $this->curl_opts;
         $curl_opts[CURLOPT_CUSTOMREQUEST] = 'PUT';
-        $curl_opts[CURLOPT_HTTPHEADER] = array('Content-Length: '.strlen($data), 'Content-type:application/json');
+        $curl_opts[CURLOPT_HTTPHEADER] = array('X-Auth-Token: '.$this->auth_token, 'Content-Length: '.strlen($data), 'Content-type:application/json');
         $curl_opts[CURLOPT_POSTFIELDS] = $data;
 
         $curl = $this->prepRequest($curl_opts, $this->base_url.$url);
@@ -72,6 +78,7 @@ class Pest {
     public function delete($url) {
         $curl_opts = $this->curl_opts;
         $curl_opts[CURLOPT_CUSTOMREQUEST] = 'DELETE';
+        $curl_opts[CURLOPT_HTTPHEADER] = array('X-Auth-Token: '.$this->auth_token, 'Accept: application/json');
 
         $curl = $this->prepRequest($curl_opts, $this->base_url.$url);
         $body = $this->doRequest($curl);
@@ -96,12 +103,12 @@ class Pest {
         return $body;
     }
 
-    public function processError($body) {
+    public function processError($code) {
         // Override this in classes that extend Pest.
         // The body of every erroneous (non-2xx/3xx) GET/POST/PUT/DELETE  
         // response goes through here prior to being used as the 'message'
         // of the resulting Pest_Exception
-        return $body;
+        return "HTTP return code : " .$code . "\n";
     }
 
     private function prepRequest($opts, $url) {
@@ -114,12 +121,12 @@ class Pest {
             'url' => $url
         );
 
-        if($opts[CURLOPT_CUSTOMREQUEST])
+        if(isset($opts[CURLOPT_CUSTOMREQUEST]))
             $this->last_request['method'] = $opts[CURLOPT_CUSTOMREQUEST];
         else
             $this->last_request['method'] = 'GET';
 
-        if($opts[CURLOPT_POSTFIELDS])
+        if(isset($opts[CURLOPT_POSTFIELDS]))
             $this->last_request['data'] = $opts[CURLOPT_POSTFIELDS];
 
         return $curl;
@@ -136,7 +143,11 @@ class Pest {
 
         curl_close($curl);
 
+	try {
         $this->checkLastResponseForError();
+	} catch (Exception $e) {
+		echo("Received exception: " .$e->getMessage() . "<br />");
+	};
 
         return $body;
     }
@@ -151,25 +162,25 @@ class Pest {
         $err = null;
         switch($meta['http_code']) {
             case 400:
-                throw new Pest_BadRequest($this->processError($body));
+                throw new Pest_BadRequest($this->processError($meta['http_code'] . ' Bad Request'));
                 break;
             case 401:
-                throw new Pest_Unauthorized($this->processError($body));
+                throw new Pest_Unauthorized($this->processError($meta['http_code'] . ' Unauthorized'));
                 break;
             case 403:
-                throw new Pest_Forbidden($this->processError($body));
+                throw new Pest_Forbidden($this->processError($meta['http_code'] . ' Forbidden'));
                 break;
             case 404:
-                throw new Pest_NotFound($this->processError($body));
+                throw new Pest_NotFound($this->processError($meta['http_code'] . ' Not Found'));
                 break;
             case 405:
-                throw new Pest_MethodNotAllowed($this->processError($body));
+                throw new Pest_MethodNotAllowed($this->processError($meta['http_code'] . ' Method Not Allowed'));
                 break;
             case 409:
-                throw new Pest_Conflict($this->processError($body));
+                throw new Pest_Conflict($this->processError($meta['http_code'] . ' Conflict'));
                 break;
             case 410:
-                throw new Pest_Gone($this->processError($body));
+                throw new Pest_Gone($this->processError($meta['http_code'] . ' Gone'));
                 break;
             case 422:
                 // Unprocessable Entity -- see http://www.iana.org/assignments/http-status-codes
@@ -177,15 +188,15 @@ class Pest {
                 // a response to a request that is syntactically correct,
                 // but semantically invalid (for example, when trying to 
                 // create a resource with some required fields missing)
-                throw new Pest_InvalidRecord($this->processError($body));
+                throw new Pest_InvalidRecord($this->processError($meta['http_code'] . ' Invalid Record'));
                 break;
             default:
                 if($meta['http_code'] >= 400 && $meta['http_code'] <= 499)
-                    throw new Pest_ClientError($this->processError($body));
+                    throw new Pest_ClientError($this->processError($meta['http_code'] . ' Client Error'));
                 elseif($meta['http_code'] >= 500 && $meta['http_code'] <= 599)
-                    throw new Pest_ServerError($this->processError($body));
+                    throw new Pest_ServerError($this->processError($meta['http_code'] . ' Server Error'));
                 elseif(!$meta['http_code'] || $meta['http_code'] >= 600) {
-                    throw new Pest_UnknownResponse($this->processError($body));
+                    throw new Pest_UnknownResponse($this->processError($meta['http_code'] . ' Unknown the Response is...'));
                 }
         }
     }
