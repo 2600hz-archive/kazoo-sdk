@@ -8,6 +8,7 @@ July 22, 2011 - 1.1 :
     - Fixing some aspects of the exception.
     - The $id argument for the CrossbarSession::get() function is now optional.
 
+
 July 14, 2011 - 1.0 :
     
     - Initial release
