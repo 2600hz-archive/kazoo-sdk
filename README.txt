@@ -1,9 +1,10 @@
 -------------------------- WHISTLE SDK --------------------------
 
 Authors: Peter Defebvre & Francis Genet
+Contributors: Philippe Sultan
 Creation Date: July 14, 2011
-Current version: 1.0
-Last modification: July 20, 2011
+Current version: 1.1
+Last modification: July 22, 2011
 
 -------------------- What is this SDK for ? ---------------------
 
@@ -15,6 +16,62 @@ without using directly the APIs provided by the 2600hz team.
 
 In order to use this SDK you'll have to modify the "URL" variable
 value as indicate in the comments.
+
+------------------ How to add/update data ? ---------------------
+
+<?php
+
+require_once 'Device.php';
+
+// Set your URL here
+$url = 'http://yourserver.yourdomain.com:8000/v1/accounts/57657653gddgshdg576576(/';
+// Set your Auth Token here
+$auth_token = 'retresarsa767653425ds65s4qs6sq';
+
+$data = array(
+	'name' => 'Test phone',
+	'sip' => array(
+		'realm' => 'some.domain.net',
+		'method' => "password",
+		'username' => "name",
+		'password' => "pass",
+		'invite_format' => "username",
+		'custom_sip_headers' => array("X-Example" => "my-custom-sip-value")
+	),
+	'caller_id' => array(
+		"external" => array(
+			"number" => "5555555555"
+		)
+	),
+	'caller_id_options' => array(
+		'reformat' => '0'
+	),
+	'media' => array(
+		'progress_timeout' => 6,
+		'ignore_early_media' => false,
+		'bypass_media' => false,
+		'codecs' => "PCMU"
+	),
+	'ringtones' => array(
+		'internal' => "dpoazkd",
+		'external' => "null"
+	),
+	'owner_id' => "98hiuh897"
+);
+
+
+// Creating the general object
+$device = new Devices($url, $auth_token);
+
+// Adding an object
+//$device->add($data);
+
+// Getting the object list
+echo "<pre>";
+print_r($device->getAll());
+echo "</pre>";
+
+?>
 
 ------------------------ Any Questions ? ------------------------
 

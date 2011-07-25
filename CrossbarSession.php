@@ -7,25 +7,30 @@
  * The other classes are just subclasses of this one
  *
  * @author Francis Genet & Peter Defebvre
- * @version 1.0
+ * @version 1.1
  * @since July 14, 2011 - 1.0
  * 
  */
 
 require_once 'Pest.php';
 
-class SDK {
+class CrossbarSession {
 
 	/**
 	 * Server url to join the API
-	 * Don't forget to put the account_id at the end and a "/"
-     * 
-     * Put the url to your server here with the account id
-     * EX : http://blabla.2600hz.com/accounts/43563787366353663563/
+	 * 
+	 * EX : http://blabla.2600hz.com/accounts/43563787366353663563/
 	 * 
 	 * @var string $URL
 	 */
 	protected $URL = '';
+    
+    /**
+     * Authentication token.
+     * 
+     * @var string $AUTH_TOKEN
+     */
+	protected $AUTH_TOKEN = '';
 	
 	/**
 	 * First definition of the URI
@@ -53,8 +58,10 @@ class SDK {
 	 * Class constructor
 	 * PEST initialization
 	 */
-	public function SDK() {
-		$this->PEST = new Pest($this->URL);
+	public function CrossbarSession($url, $auth_token) {
+		$this->URL = $url;
+		$this->AUTH_TOKEN = $auth_token;
+		$this->PEST = new Pest($this->URL, $auth_token);
 	}
 
 	/**
@@ -63,7 +70,7 @@ class SDK {
 	 * @return array  
 	 */
 	public function getAll() {
-		$result = json_decode($this->PEST->get($this->URL.$this->URI), TRUE);
+		$result = json_decode($this->PEST->get($this->URI), TRUE);
 
 		return $result;
 	}
@@ -74,8 +81,8 @@ class SDK {
 	 * @param int $id
 	 * @return array 
 	 */
-	public function get($id) {
-		$result = json_decode($this->PEST->get($this->URL.$this->URI.'/'.$id), TRUE);
+	public function get($id = '') {
+		$result = json_decode($this->PEST->get($this->URI.'/'.$id), TRUE);
 
 		return $result;
 	}
@@ -124,7 +131,7 @@ class SDK {
 	 * @return mixed 
 	 */
 	public function delete($id) {
-		$result = json_decode($this->PEST->delete($this->URL.$this->URI.'/'.$id), TRUE);
+		$result = json_decode($this->PEST->delete($this->URI.'/'.$id), TRUE);
 
 		return $result;
 	}
