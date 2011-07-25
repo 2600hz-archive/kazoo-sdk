@@ -24,7 +24,7 @@ value as indicate in the comments.
 require_once 'Device.php';
 
 // Set your URL here
-$url = 'http://yourserver.yourdomain.com:8000/v1/accounts/57657653gddgshdg576576(/';
+$url = 'http://yourserver.yourdomain.com:8000/v1/accounts/57657653gddgshdg576576/';
 // Set your Auth Token here
 $auth_token = 'retresarsa767653425ds65s4qs6sq';
 
