@@ -76,7 +76,7 @@ echo "</pre>";
 ------------------------ Any Questions ? ------------------------
 
  - Visit http://2600hz.org
- - Join us on IRC @freenode.net - #2600hz (frifri591 | macpie)
+ - Join us on IRC @freenode.net - #2600hz (freefree | macpie)
  - Copyright 2011 - 2600hz
 
 -----------------------------------------------------------------
