@@ -1,10 +1,14 @@
 <?php
 
 /**
- * Description of Auth
+ * Auth class
  *
- * @author frifri
+ * @author Francis Genet
+ * @version 1.3
+ * @since August 19, 2011 - 1.2
+ * 
  */
+
 require_once 'Pest.php';
 
 class Auth {
@@ -19,7 +23,7 @@ class Auth {
         $this->PEST = new Pest($url);
     }
     
-    public function getUserAuth() {
+    public function setUserAuth() {
         // the datas we gonna send
         $json['data'] = array(
             'credentials' => $this->CREDENTIALS,
@@ -28,7 +32,9 @@ class Auth {
         
         try {
             $result = json_decode($this->PEST->basicPut("user_auth", json_encode($json)));
-            return $result;
+            
+            define("ACCOUNT_ID", $result->data->account_id);
+            define("AUTH_TOKEN", $result->auth_token);
         } catch(Exception $e) {
             echo $e->getMessage();
             return FALSE;

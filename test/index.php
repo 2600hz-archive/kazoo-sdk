@@ -4,7 +4,7 @@
  * This page launch all the tests
  * 
  * @author Francis Genet
- * @version 1.1
+ * @version 1.3
  * @since July 22, 2011 - 1.1
  */
 
@@ -18,12 +18,9 @@ $username = "frifri3";
 $password = "fatboy00";
 
 $auth = new Auth($url, $username, $password);
-$authObj = $auth->getUserAuth();
+$auth->setUserAuth();
 
-$account_id = $authObj->data->account_id;
-$auth_token = $authObj->auth_token;
-
-new GeneralTest($url, $account_id, $auth_token);
-new ActionTest($url, $account_id, $auth_token);
+new GeneralTest($url);
+new ActionTest($url);
 
 ?>
