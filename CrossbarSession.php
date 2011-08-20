@@ -58,10 +58,11 @@ class CrossbarSession {
 	 * Class constructor
 	 * PEST initialization
 	 */
-	public function CrossbarSession($url, $auth_token) {
-		$this->URL = $url;
+    public function CrossbarSession($url, $account_id, $auth_token) {
+        //http://blah.yourdomain.com:8000/v1/accounts/{your_account_id}/
+		$this->URL = $url."accounts/".$account_id."/";
 		$this->AUTH_TOKEN = $auth_token;
-		$this->PEST = new Pest($this->URL, $auth_token);
+		$this->PEST = new Pest($this->URL, $this->AUTH_TOKEN);
 	}
 
 	/**

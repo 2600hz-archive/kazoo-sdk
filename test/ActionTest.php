@@ -15,16 +15,18 @@ class ActionTest {
 
     private $URL = '';
     private $AUTH_TOKEN = '';
+    private $ACCOUNT_ID = '';
     
-    function __construct($url, $auth_token) {
+    function __construct($url, $account_id, $auth_token) {
         $this->URL = $url;
+        $this->ACCOUNT_ID = $account_id;
         $this->AUTH_TOKEN = $auth_token;
         
         $this->doTest();
     }
     
     private function doTest() {
-        $CrossbarSession = new CrossbarSession($this->URL, $this->AUTH_TOKEN);
+        $CrossbarSession = new CrossbarSession($this->URL, $this->ACCOUNT_ID, $this->AUTH_TOKEN);
     
         echo "<pre>";
         print_r($CrossbarSession->get('devices'));

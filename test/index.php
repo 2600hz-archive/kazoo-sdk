@@ -10,13 +10,20 @@
 
 require_once 'GeneralTest.php';
 require_once 'ActionTest.php';
+require_once '../Auth.php';
 
-// Set your URL here
-$url = 'http://blah.yourdomain.com:8000/v1/accounts/{your_account_id}/';
-// Set your Auth Token here (If the server need one)
-$auth_token = '{your_auth_token}';
+// Set your infos here
+$url = 'http://apps002-dev-ord.2600hz.com:8000/v1/';
+$username = "frifri3";
+$password = "fatboy00";
 
-new GeneralTest($url, $auth_token);
-new ActionTest($url, $auth_token);
+$auth = new Auth($url, $username, $password);
+$authObj = $auth->getUserAuth();
+
+$account_id = $authObj->data->account_id;
+$auth_token = $authObj->auth_token;
+
+new GeneralTest($url, $account_id, $auth_token);
+new ActionTest($url, $account_id, $auth_token);
 
 ?>

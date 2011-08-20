@@ -22,7 +22,7 @@ class Pest {
     public $last_response;
     public $last_request;
 
-    public function __construct($base_url, $auth_token) {
+    public function __construct($base_url, $auth_token = "") {
         if(!function_exists('curl_init')) {
             throw new Exception('CURL module not available! Pest requires CURL. See http://php.net/manual/en/book.curl.php');
         }
@@ -49,6 +49,22 @@ class Pest {
         $curl_opts = $this->curl_opts;
         $curl_opts[CURLOPT_CUSTOMREQUEST] = 'POST';
         $curl_opts[CURLOPT_HTTPHEADER] = array('X-Auth-Token: '.$this->auth_token, 'Content-Length: '.strlen($data), 'Content-type:application/json');
+        $curl_opts[CURLOPT_POSTFIELDS] = $data;
+
+        $curl = $this->prepRequest($curl_opts, $this->base_url.$url);
+        $body = $this->doRequest($curl);
+
+        $body = $this->processBody($body);
+
+        return $body;
+    }
+    
+    public function basicPut($url, $data) {
+        $data = (is_array($data)) ? http_build_query($data) : $data;
+
+        $curl_opts = $this->curl_opts;
+        $curl_opts[CURLOPT_CUSTOMREQUEST] = 'PUT';
+        $curl_opts[CURLOPT_HTTPHEADER] = array('Content-Length: '.strlen($data), 'Content-type:application/json');
         $curl_opts[CURLOPT_POSTFIELDS] = $data;
 
         $curl = $this->prepRequest($curl_opts, $this->base_url.$url);
