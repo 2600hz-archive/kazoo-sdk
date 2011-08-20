@@ -7,7 +7,7 @@
  * The other classes are just subclasses of this one
  *
  * @author Francis Genet & Peter Defebvre
- * @version 1.1
+ * @version 1.3
  * @since July 14, 2011 - 1.0
  * 
  */
@@ -24,13 +24,6 @@ class CrossbarSession {
 	 * @var string $URL
 	 */
 	protected $URL = '';
-    
-    /**
-     * Authentication token.
-     * 
-     * @var string $AUTH_TOKEN
-     */
-	protected $AUTH_TOKEN = '';
 	
 	/**
 	 * First definition of the URI
@@ -58,11 +51,11 @@ class CrossbarSession {
 	 * Class constructor
 	 * PEST initialization
 	 */
-    public function CrossbarSession($url, $account_id, $auth_token) {
+    public function CrossbarSession($url) {
         //http://blah.yourdomain.com:8000/v1/accounts/{your_account_id}/
-		$this->URL = $url."accounts/".$account_id."/";
-		$this->AUTH_TOKEN = $auth_token;
-		$this->PEST = new Pest($this->URL, $this->AUTH_TOKEN);
+        
+		$this->URL = $url."accounts/".ACCOUNT_ID."/";
+		$this->PEST = new Pest($this->URL, AUTH_TOKEN);
 	}
 
 	/**

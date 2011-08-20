@@ -2,8 +2,8 @@
 
 Authors: Peter Defebvre & Francis Genet
 Contributors: Philippe Sultan
-Creation Date: July 14, 2011
-Current version: 1.1
+Creation Date: August 19, 2011
+Current version : 1.3
 Last modification: July 22, 2011
 
 -------------------- What is this SDK for ? ---------------------
@@ -23,10 +23,10 @@ value as indicate in the comments.
 
 require_once 'Device.php';
 
-// Set your URL here
-$url = 'http://yourserver.yourdomain.com:8000/v1/accounts/57657653gddgshdg576576/';
-// Set your Auth Token here
-$auth_token = 'retresarsa767653425ds65s4qs6sq';
+// Set your infos here
+$url = 'http://your.domain.com:8000/v1/';
+$username = "yourusername";
+$password = "yourpassword";
 
 $data = array(
 	'name' => 'Test phone',
@@ -59,9 +59,12 @@ $data = array(
 	'owner_id' => "98hiuh897"
 );
 
+// Auth
+$auth = new Auth($url, $username, $password);
+$auth->setUserAuth();
 
 // Creating the general object
-$device = new Devices($url, $auth_token);
+$device = new Devices($url);
 
 // Adding an object
 //$device->add($data);
