@@ -13,9 +13,9 @@ require_once 'ActionTest.php';
 require_once '../Auth.php';
 
 // Set your infos here
-$url = 'http://apps002-dev-ord.2600hz.com:8000/v1/';
-$username = "frifri3";
-$password = "fatboy00";
+$url = 'http://yourDomain:8000/v1/';
+$username = "username";
+$password = "password";
 
 $auth = new Auth($url, $username, $password);
 $auth->setUserAuth();
