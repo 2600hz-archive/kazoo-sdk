@@ -2,9 +2,9 @@
 
 Authors: Peter Defebvre & Francis Genet
 Contributors: Philippe Sultan
-Creation Date: August 19, 2011
+Creation Date: July 14, 2011
 Current version : 1.3
-Last modification: July 22, 2011
+Last modification: August 19, 2011
 
 -------------------- What is this SDK for ? ---------------------
 
