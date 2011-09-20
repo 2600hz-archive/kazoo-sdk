@@ -15,11 +15,13 @@ class Auth {
 
     private $CREDENTIALS = '';
     private $USERNAME = '';
+    private $REALM = '';
     private $PEST;
 
-    function __construct($url, $username, $password) {
+    function __construct($url, $realm, $username, $password) {
         $this->CREDENTIALS = md5($username.":".$password);
         $this->USERNAME = $username;
+        $this->REALM = $realm;
         $this->PEST = new Pest($url);
     }
     
@@ -27,7 +29,7 @@ class Auth {
         // the datas we gonna send
         $json['data'] = array(
             'credentials' => $this->CREDENTIALS,
-            'realm' => $this->USERNAME.'.sip.2600hz.com'
+            'realm' => $this->REALM
         );
         
         try {

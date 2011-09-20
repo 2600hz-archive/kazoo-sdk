@@ -22,11 +22,13 @@ value as indicate in the comments.
 <?php
 
 require_once 'Device.php';
+require_once 'Auth.php';
 
 // Set your infos here
 $url = 'http://your.domain.com:8000/v1/';
 $username = "yourusername";
 $password = "yourpassword";
+$realm = "your.customer.realm.com";
 
 $data = array(
 	'name' => 'Test phone',
@@ -60,7 +62,7 @@ $data = array(
 );
 
 // Auth
-$auth = new Auth($url, $username, $password);
+$auth = new Auth($url, $realm, $username, $password);
 $auth->setUserAuth();
 
 // Creating the general object
