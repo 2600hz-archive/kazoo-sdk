@@ -16,8 +16,9 @@ require_once '../Auth.php';
 $url = 'http://yourDomain:8000/v1/';
 $username = "username";
 $password = "password";
+$realm = "your.sip.2600hz.com";
 
-$auth = new Auth($url, $username, $password);
+$auth = new Auth($url, $realm, $username, $password);
 $auth->setUserAuth();
 
 new GeneralTest($url);
