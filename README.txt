@@ -24,12 +24,20 @@ value as indicate in the comments.
 require_once 'Device.php';
 require_once 'Auth.php';
 
-// Set your infos here
+// Set your info here
 $url = 'http://your.domain.com:8000/v1/';
 $username = "yourusername";
 $password = "yourpassword";
 $realm = "your.customer.realm.com";
 
+// Auth
+$auth = new Auth($url, $realm, $username, $password);
+$auth->setUserAuth();
+
+// Creating the general object for a new device
+$device = new Devices($url);
+
+// Define info about a new device
 $data = array(
 	'name' => 'Test phone',
 	'sip' => array(
@@ -61,15 +69,8 @@ $data = array(
 	'owner_id' => "98hiuh897"
 );
 
-// Auth
-$auth = new Auth($url, $realm, $username, $password);
-$auth->setUserAuth();
-
-// Creating the general object
-$device = new Devices($url);
-
-// Adding an object
-//$device->add($data);
+// Setup the actual phone
+$device->add($data);
 
 // Getting the object list
 echo "<pre>";
